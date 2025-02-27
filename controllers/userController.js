@@ -15,7 +15,7 @@ async function addUser(req, res) {
         }
         res.json({ status: true, data: user, message: "user Registered Successfully" })
     } catch (error) {
-        res.json({ error })
+        res.json({ status: false, error })
     }
 }
 
@@ -29,7 +29,7 @@ async function userLogin(req, res) {
 
         let isMacth = await bcrypt.compare(password, user.password);
 
-        if(!isMacth){
+        if (!isMacth) {
             return res.json({ status: false, data: null, message: "Incorrect password" })
         }
 
@@ -40,4 +40,4 @@ async function userLogin(req, res) {
 }
 
 
-module.exports = { addUser ,userLogin}
+module.exports = { addUser, userLogin }
