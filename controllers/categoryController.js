@@ -30,14 +30,15 @@ async function getAllCategories(req, res) {
 }
 
 async function editCategory(req, res) {
-
+        const {cate_name , slug} = req.body
+        const {id} = req.params;
     try {
-        let cate = await categoryModel.find()
+        let cate = await categoryModel.findByIdAndUpdate(id,{cate_name,slug})
         if (!cate) {
             return res.json({ status: false, data: null, message: "category Not found" })
         }
 
-        res.json({ status: true, data: cate, message: "category Successfully Loaded" })
+        res.json({ status: true, data: cate, message: "category upadated Successfully" })
     } catch (error) {
         res.json({ error })
     }
@@ -47,7 +48,7 @@ async function editCategory(req, res) {
 
 async function deleteCategory(req, res) {
     const { id } = req.params;
-    try {
+    try {   
         let cate = await categoryModel.findByIdAndDelete(id)
         if (!cate) {
             return res.json(new ApiResponse(false, null, "category Not found", 400))
