@@ -2,7 +2,7 @@ const ApiResponse = require("../api-response/response")
 const productModel = require("../models/productModel")
 
 async function addProduct(req, res) {
-    let {  } = req.body
+    // let {  } = req.body
     try {
 
         let prod = await productModel.create(req.body)
@@ -30,10 +30,10 @@ async function getAllProduct(req, res) {
 }
 
 async function editProduct(req, res) {
-    const { cate_name, slug } = req.body
+    const { prod_name, price } = req.body
     const { id } = req.params;
     try {
-        let prod = await productModel.findByIdAndUpdate(id, { cate_name, slug })
+        let prod = await productModel.findByIdAndUpdate(id,{ prod_name, price },{ new: true })
         if (!prod) {
             return res.json({ status: false, data: null, message: "Product Not found" })
         }
