@@ -1,11 +1,14 @@
 const ApiResponse = require("../api-response/response")
 const productModel = require("../models/productModel")
+require('dotenv').config()
 
 async function addProduct(req, res) {
-    // let {  } = req.body
+    let file = req.file
+    let url = `${req.protocol}://${req.hostname}:${process.env.PORT}`
+     
     try {
 
-        let prod = await productModel.create(req.body)
+        let prod = await productModel.create({...req.body,thumbnail : `${url}/uploads/products/${file.filename}`})
         if (!prod) {
             return res.json(new ApiResponse(false, null, "Product Not added", 400))
         }
