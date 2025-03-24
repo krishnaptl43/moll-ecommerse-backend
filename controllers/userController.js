@@ -1,4 +1,6 @@
 require('dotenv').config();
+const ApiResponse = require('../api-response/response');
+const { generateToken } = require('../config/tokenManager');
 const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const saltRounds = parseInt(process.env.SALT_ROUND)
@@ -32,8 +34,11 @@ async function userLogin(req, res) {
         if (!isMacth) {
             return res.json({ status: false, data: null, message: "Incorrect password" })
         }
+        user = user.toObject()
+        let token = generateToken({...user})
 
-        res.json({ status: true, data: user, message: "user Login Successfully" })
+        res.json(new ApiResponse(true, {...user,token}, "user Login Successfully"))
+
     } catch (error) {
         res.json({ error })
     }

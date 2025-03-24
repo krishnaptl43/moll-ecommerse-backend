@@ -16,6 +16,7 @@ const productSchema = new Schema({
     },
     category: {
         type: Schema.Types.Mixed,
+        ref : 'category',
         required: true,
     },
     color: {

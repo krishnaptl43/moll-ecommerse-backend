@@ -5,10 +5,10 @@ require('dotenv').config()
 async function addProduct(req, res) {
     let file = req.file
     let url = `${req.protocol}://${req.hostname}:${process.env.PORT}`
-     
+
     try {
 
-        let prod = await productModel.create({...req.body,thumbnail : `${url}/uploads/products/${file.filename}`})
+        let prod = await productModel.create({ ...req.body, supplier: req.data.name, thumbnail: `${url}/uploads/products/${file.filename}` })
         if (!prod) {
             return res.json(new ApiResponse(false, null, "Product Not added", 400))
         }
@@ -36,7 +36,7 @@ async function editProduct(req, res) {
     const { prod_name, price } = req.body
     const { id } = req.params;
     try {
-        let prod = await productModel.findByIdAndUpdate(id,{ prod_name, price },{ new: true })
+        let prod = await productModel.findByIdAndUpdate(id, { prod_name, price }, { new: true })
         if (!prod) {
             return res.json({ status: false, data: null, message: "Product Not found" })
         }
@@ -46,8 +46,6 @@ async function editProduct(req, res) {
         res.json({ error })
     }
 }
-
-
 
 async function deleteProduct(req, res) {
     const { id } = req.params;
