@@ -5,7 +5,7 @@ const productModel = require("../models/productModel");
 async function addCart(req, res) {
     let { product } = req.body
     let { _id } = req.data
-    
+
     try {
         let productExist = await productModel.findById(product)
 
@@ -53,22 +53,32 @@ async function getAllCart(req, res) {
     }
 }
 
-async function editCategory(req, res) {
-    const { cate_name, slug } = req.body
-    const { id } = req.params;
+async function cartQuantity(req, res) {
+    const { quantity } = req.body
+    const { cartId, productId } = req.params;
+
+    if (quantity < 1 || typeof quantity !== "number") {
+        return res.json({ status: false, data: null, message: "quantity value is Invalid" })
+    }
+
     try {
-        let cate = await cartModel.findByIdAndUpdate(id, { cate_name, slug })
-        if (!cate) {
-            return res.json({ status: false, data: null, message: "category Not found" })
+        let productExist = await productModel.findById(productId)
+
+        if (!productExist) {
+            return res.json(new ApiResponse(false, null, "product is not Exits"))
         }
 
-        res.json({ status: true, data: cate, message: "category upadated Successfully" })
+        let updateQuatity = await cartModel.findByIdAndUpdate(cartId, { quantity, total_price: productExist.price * quantity }, { new: true }).populate("product")
+
+        if (!updateQuatity) {
+            return res.json({ status: false, data: null, message: "quantity is Not Updated" })
+        }
+
+        res.json(new ApiResponse(true, updateQuatity, "updated"))
     } catch (error) {
         res.json({ error })
     }
 }
-
-
 
 async function deleteCart(req, res) {
     const { id } = req.params;
@@ -85,7 +95,8 @@ async function deleteCart(req, res) {
 }
 
 
-module.exports = { getAllCart, addCart, deleteCart,
+module.exports = {
+    getAllCart, addCart, deleteCart, cartQuantity
     //  incrementCart,
     //   decrementCart 
-    }
+}

@@ -3,7 +3,7 @@ const { addProduct, editProduct, deleteProduct } = require('../controllers/produ
 const { addCategory, editCategory, deleteCategory } = require('../controllers/categoryController');
 const usersRouter = require("./users")
 const upload = require('../config/multer');
-const { getAllCart, addCart, deleteCart } = require('../controllers/cartController');
+const { getAllCart, addCart, deleteCart, cartQuantity } = require('../controllers/cartController');
 var router = express.Router();
 
 /* GET users listing. */
@@ -19,8 +19,7 @@ router.delete('/products/delete/:id', deleteProduct);
 
 router.get('/cart', getAllCart);
 router.post('/cart/add', addCart);
-// router.use('/cart/increment/:id', incrementCart);
-// router.use('/cart/decrement/:id', decrementCart);
+router.put('/cart/quantity/:cartId/:productId', cartQuantity);
 router.delete('/cart/delete/:id', deleteCart);
 
 
