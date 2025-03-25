@@ -32,6 +32,20 @@ async function getAllProduct(req, res) {
     }
 }
 
+async function getProductById(req, res) {
+     const {id} = req.params
+    try {
+        let prod = await productModel.findById(id)
+        if (!prod) {
+            return res.json(new ApiResponse(false, null, "Product Not added", 400))
+        }
+
+        res.json(new ApiResponse(true, prod, "Product loaded Successfully", 200))
+    } catch (error) {
+        res.json({ error })
+    }
+}
+
 async function editProduct(req, res) {
     const { prod_name, price } = req.body
     const { id } = req.params;
@@ -62,4 +76,4 @@ async function deleteProduct(req, res) {
 }
 
 
-module.exports = { getAllProduct, addProduct, deleteProduct, editProduct }
+module.exports = { getAllProduct, addProduct, deleteProduct, editProduct,getProductById }
