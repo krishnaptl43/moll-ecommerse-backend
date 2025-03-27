@@ -4,6 +4,7 @@ const { addCategory, editCategory, deleteCategory } = require('../controllers/ca
 const usersRouter = require("./users")
 const upload = require('../config/multer');
 const { getAllCart, addCart, deleteCart, cartQuantity } = require('../controllers/cartController');
+const { createOrder } = require('../controllers/orderController');
 var router = express.Router();
 
 /* GET users listing. */
@@ -22,5 +23,6 @@ router.post('/cart/add', addCart);
 router.put('/cart/quantity/:cartId/:productId', cartQuantity);
 router.delete('/cart/delete/:id', deleteCart);
 
+router.post('/order/create', createOrder);
 
 module.exports = router;

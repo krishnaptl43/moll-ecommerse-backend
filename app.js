@@ -11,7 +11,8 @@ const categoryRouter = require('./routes/category')
 const productRouter = require('./routes/product');
 const { verifyToken } = require('./config/tokenManager');
 const ApiResponse = require('./api-response/response');
-const protectedRoute = require('./routes/protectedRoute')
+const protectedRoute = require('./routes/protectedRoute');
+const countModel = require('./models/count');
 
 const app = express();
 
@@ -28,16 +29,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/uploads", express.static('uploads'));
 
 app.use('/', indexRouter);
+app.post('/count', async (req, res) => {
+  const { name } = req.body
+  try {
+    let result = await countModel.create({ name })
+    if (!result) {
+      res.json(new ApiResponse(false, null, "not done"))
+    }
+
+    res.json(new ApiResponse(true, result, "success"))
+  } catch (error) {
+    res.json(error)
+  }
+});
 app.use('/users', usersRouter);
 app.use('/categories', categoryRouter);
 app.use('/products', productRouter);
 
 app.use('/v1', (req, res, next) => {
   let { status } = verifyToken(req)
-  if (status){
+  if (status) {
     next()
-  }else{
-    res.json(new ApiResponse(false,null,"this is proctected route"))
+  } else {
+    res.json(new ApiResponse(false, null, "this is proctected route"))
   }
 });
 app.use('/v1', protectedRoute);
